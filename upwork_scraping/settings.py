@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from getenv import env
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -19,14 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '5s#($7yy6wk180c$!v(7incqf@x@#eqq7h2#ly-h&kgs#oob$%'
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+DEBUG = env('DEBUG')
+SECRET_KEY = env('SECRET_KEY')
 
 # Application definition
 
@@ -112,9 +111,10 @@ GRAPH_MODELS = {
 # Upwork auth
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
                            'django_upwork_auth.backends.UpworkOAuthBackend']
-from upwork_keys import *
 UPWORK_AUTH_ALLOWED_USERS = ['undead404']
 UPWORK_AUTH_AUTO_CREATE_USERS = True
 SITE_ID = 1
 UPWORK_AUTH_LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/callback'
 LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/callback'
+UPWORK_OAUTH_KEY = env('UPWORK_OAUTH_KEY')
+UPWORK_OAUTH_SECRET = env('UPWORK_OAUTH_SECRET')
