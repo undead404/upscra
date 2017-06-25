@@ -14,3 +14,4 @@ build/
 tests/report/
 keys.txt
 venv/
+upwork_keys.py
