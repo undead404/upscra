@@ -112,7 +112,7 @@ GRAPH_MODELS = {
 # Upwork auth
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
                            'django_upwork_auth.backends.UpworkOAuthBackend']
-from upwork_keys.py import *
+from upwork_keys import *
 UPWORK_AUTH_ALLOWED_USERS = ['undead404']
 UPWORK_AUTH_AUTO_CREATE_USERS = True
 SITE_ID = 1
