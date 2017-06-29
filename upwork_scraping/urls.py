@@ -15,12 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-import django_upwork_auth
-from .views import callback, login_page
+# import django_upwork_auth
+from .views import login_page
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^upwork_oauth_login/callback/', callback, name="callback"),
-    url(r'^upwork_oauth_login/', include('django_upwork_auth.urls')),
+    # url(r'^upwork_oauth_login/callback/', callback, name="callback"),
+    # url(r'^upwork_oauth_login/', include('django_upwork_auth.urls')),
     url(r'^$', login_page, name="login_page"),
 ]

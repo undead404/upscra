@@ -37,7 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'django_upwork_auth',
+    # 'django_upwork_auth',
     'django_extensions',
     'upwork_scraping',
 )
@@ -109,12 +109,16 @@ GRAPH_MODELS = {
 }
 
 # Upwork auth
-AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
-                           'django_upwork_auth.backends.UpworkOAuthBackend']
+# AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
+#                            'django_upwork_auth.backends.UpworkOAuthBackend']
+# AUTHENTICATION_BACKENDS = ['django_upwork_auth.backends.UpworkOAuthBackend']
 UPWORK_AUTH_ALLOWED_USERS = ['undead404']
 UPWORK_AUTH_AUTO_CREATE_USERS = True
 SITE_ID = 1
-UPWORK_AUTH_LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/callback'
-LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/callback'
+# UPWORK_AUTH_LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/callback'
+# LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/callback'
 UPWORK_OAUTH_KEY = env('UPWORK_OAUTH_KEY')
 UPWORK_OAUTH_SECRET = env('UPWORK_OAUTH_SECRET')
+UPWORK_OAUTH_ACCESS_TOKEN = env('UPWORK_OAUTH_ACCESS_TOKEN')
+UPWORK_OAUTH_ACCESS_TOKEN_SECRET = env('UPWORK_OAUTH_ACCESS_TOKEN_SECRET')
+# UPWORK_OAUTH_ACCESS_TOKEN_SESSION_KEY = '_ort'
