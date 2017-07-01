@@ -2,14 +2,29 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 
-class Skill(models.Model):
-    name = models.CharField(max_length=50, primary_key=True)
+class Chat(models.Model):
+    all_members_are_administrators = models.BooleanField(default=False)
+    first_name = models.CharField(blank=True, max_length=100)
+    id = models.IntegerField(editable=False, primary_key=True)
+    last_name = models.CharField(blank=True, max_length=100)
+    title = models.CharField(blank=True, max_length=100)
+    TYPE_CHOICES = [('private', 'Private'),
+                    ('group', 'Group'), ('channel', 'Channel')]
+    type = models.CharField(choices=TYPE_CHOICES, max_length=10)
+    username = models.CharField(blank=True, max_length=100)
 
     def __str__(self):
-        return self.name
+        if self.type == 'private':
+            return "{first_name} {last_name} (private)".format(first_name=self.first_name, last_name=self.last_name)
+        else:
+            return "{title} ({type})".format(title=self.title, type=self.type)
 
-    class Meta:
-        ordering = ['name']
+    def clean(self):
+        if self.type == 'private' and not self.first_name and not self.last_name:
+            raise ValidationError(
+                'At least one of first name or last name should be set for private chats.')
+        if self.type == 'group' and not self.title:
+            raise ValidationError('Title must be set for group chats.')
 
 
 class Job(models.Model):
@@ -27,7 +42,8 @@ class Job(models.Model):
     id = models.CharField(primary_key=True, max_length=50)
     job_status = models.CharField(max_length=50)
     job_type = models.CharField(max_length=50)
-    skills = models.ManyToManyField(Skill, related_name="jobs")
+    query = models.ForeignKey(
+        "Query", null=True, on_delete=models.SET_NULL, related_name="jobs")
     snippet = models.TextField()
     subcategory2 = models.CharField(max_length=200)
     title = models.CharField(max_length=200)
@@ -36,6 +52,9 @@ class Job(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_message(self):
+        return "[{budget}$] {title} {url}".format(budget=self.budget, title=self.title, url=self.url)
 
     @staticmethod
     def from_dict(job_dict):
@@ -68,7 +87,10 @@ class Job(models.Model):
             job_data['workload'] = ''
         else:
             job_data['workload'] = job_dict['workload']
-        return Job(**job_data)
+        job, is_new = Job.objects.update_or_create(**job_data)
+        if is_new:
+            job.save()
+        return job
 
     class Meta:
         get_latest_by = 'date_created'
@@ -85,7 +107,7 @@ class Query(models.Model):
     client_hires = models.CharField(
         blank=True, help_text="A number or range used to filter the search by clients with a number of past hires equal to, more or less than, or within the values provided. Single parameters such as `1` or `2,3` are valid (comma-separated values result in `OR` queries). Ranges such as `[10 TO 20]` are also valid. Examples: `5` - the number of past hires is to 5; `0-10`: number of past hires is 0 <= n <= 10; `10-` - the number of past hires is >=10; `-5` - the number of past hires is <= 5", max_length=50)
     days_posted = models.IntegerField(
-        blank=True, help_text="Number of days since the job was posted", null=True)
+        default=1, help_text="Number of days since the job was posted", null=True)
     DURATIONS = (('', 'Any'), ('week', 'Week'), ('month', 'Month'),
                  ('quarter', 'Quarter'), ('semester', 'Semester'), ('ongoing', 'Ongoing'))
     duration = models.CharField(blank=True, choices=DURATIONS,

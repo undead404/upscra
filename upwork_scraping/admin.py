@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from .models import Skill, Job, Query
+from .models import Chat, Job, Query
 
-admin.site.register(Skill)
+admin.site.register(Chat)
 admin.site.register(Job)
 admin.site.register(Query)
