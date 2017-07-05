@@ -34,20 +34,20 @@ class Command(BaseCommand):
         client = upwork.Client(settings.UPWORK_OAUTH_KEY, settings.UPWORK_OAUTH_SECRET,
                                oauth_access_token=settings.UPWORK_OAUTH_ACCESS_TOKEN, oauth_access_token_secret=settings.UPWORK_OAUTH_ACCESS_TOKEN_SECRET)
         jobs_num = 0
-        for query in Query.objects.all():
-            # print(query)
-            offset = 0
-            while True:
-                data = query.get_key_values()
-                data['paging'] = "{offset};{count}".format(
-                    count=JOBS_NUM_PER_PAGE, offset=offset)
-                response = client.provider_v2.search_jobs(data=data)
-                # pprint(response)
-                for job_dict in response:
-                    job = Job.from_dict(job_dict)
-                    job.query = query
-                jobs_num += len(response)
-                if len(response) < JOBS_NUM_PER_PAGE:
-                    break
-                offset += JOBS_NUM_PER_PAGE
+        query = Query.objects.get(skills="python")
+        # print(query)
+        offset = 0
+        while True:
+            data = query.get_key_values()
+            data['paging'] = "{offset};{count}".format(
+                count=JOBS_NUM_PER_PAGE, offset=offset)
+            response = client.provider_v2.search_jobs(data=data)
+            # pprint(response)
+            for job_dict in response:
+                job = Job.from_dict(job_dict)
+                job.query = query
+            jobs_num += len(response)
+            if len(response) < JOBS_NUM_PER_PAGE:
+                break
+            offset += JOBS_NUM_PER_PAGE
         print("{} jobs scraped.".format(jobs_num))
