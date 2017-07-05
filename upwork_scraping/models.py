@@ -40,6 +40,7 @@ class Job(models.Model):
     date_created = models.DateTimeField()
     # duration
     id = models.CharField(primary_key=True, max_length=50)
+    is_shown = models.BooleanField(default=False)
     job_status = models.CharField(max_length=50)
     job_type = models.CharField(max_length=50)
     query = models.ForeignKey(
@@ -87,7 +88,8 @@ class Job(models.Model):
             job_data['workload'] = ''
         else:
             job_data['workload'] = job_dict['workload']
-        job, is_new = Job.objects.update_or_create(**job_data)
+        job, is_new = Job.objects.update_or_create(
+            id=job_data['id'], defaults=job_data)
         if is_new:
             job.save()
         return job

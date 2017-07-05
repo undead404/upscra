@@ -39,15 +39,17 @@ class Command(BaseCommand):
         offset = 0
         while True:
             data = query.get_key_values()
-            data['paging'] = "{offset};{count}".format(
-                count=JOBS_NUM_PER_PAGE, offset=offset)
-            response = client.provider_v2.search_jobs(data=data)
+            # data['page'] = "{offset};{count}".format(
+            #     count=JOBS_NUM_PER_PAGE, offset=offset)
+            response = client.provider_v2.search_jobs(
+                data=data, page_offset=offset, page_size=JOBS_NUM_PER_PAGE)
             # pprint(response)
             for job_dict in response:
                 job = Job.from_dict(job_dict)
                 job.query = query
             jobs_num += len(response)
             if len(response) < JOBS_NUM_PER_PAGE:
+                print(len(response), JOBS_NUM_PER_PAGE)
                 break
             offset += JOBS_NUM_PER_PAGE
         print("{} jobs scraped.".format(jobs_num))
