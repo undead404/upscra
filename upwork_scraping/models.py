@@ -2,31 +2,6 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 
-class Chat(models.Model):
-    all_members_are_administrators = models.BooleanField(default=False)
-    first_name = models.CharField(blank=True, max_length=100)
-    id = models.IntegerField(editable=False, primary_key=True)
-    last_name = models.CharField(blank=True, max_length=100)
-    title = models.CharField(blank=True, max_length=100)
-    TYPE_CHOICES = [('private', 'Private'),
-                    ('group', 'Group'), ('channel', 'Channel')]
-    type = models.CharField(choices=TYPE_CHOICES, max_length=10)
-    username = models.CharField(blank=True, max_length=100)
-
-    def __str__(self):
-        if self.type == 'private':
-            return "{first_name} {last_name} (private)".format(first_name=self.first_name, last_name=self.last_name)
-        else:
-            return "{title} ({type})".format(title=self.title, type=self.type)
-
-    def clean(self):
-        if self.type == 'private' and not self.first_name and not self.last_name:
-            raise ValidationError(
-                'At least one of first name or last name should be set for private chats.')
-        if self.type == 'group' and not self.title:
-            raise ValidationError('Title must be set for group chats.')
-
-
 class Job(models.Model):
     budget = models.IntegerField(default=0)
     category2 = models.CharField(max_length=50)
@@ -103,6 +78,7 @@ class Query(models.Model):
         blank=True, help_text="A number or range used to filter the search by jobs having a budget equal to, more or less than, or within the values provided. For example: `[100 TO 1000]` - the budget is between 100 and 1000; `1000` - the budget is equal to 1000. `500-1000` - the budget `b` is 500 <= b <= 1000, `1000-` - the budget is >=1000; `-200` - the budget is <= 200", max_length=50)
     category2 = models.CharField(
         blank=True, help_text="The category (V2) of the freelancer's profile. Use Metadata resource to get it. You can get it via Metadata Category (v2) resource", max_length=50)
+    channel_id = models.IntegerField()
     client_feedback = models.CharField(
         blank=True, help_text="A number or range used to filter the search by jobs posted by clients with a rating equal to, more or less than, or within the values provided. If the value is `None`, then jobs from clients without rating are returned. Single parameters such as `1` or `2,3` are valid (comma separated values result in `OR` queries). Ranges such as `[2 TO 4]` are also valid. Examples: `5.0` - the rating is equal to 5.0; `1-5` - the rating is so that 1 <= n <= 5; `1-` - the rating is >=1; `-5` - the rating is <= 5", max_length=50)
     client_hires = models.CharField(
@@ -116,7 +92,7 @@ class Query(models.Model):
     JOB_STATUSES = (('', 'Any'), ('open', 'Open'),
                     ('completed', 'Completed'), ('cancelled', 'Cancelled'))
     job_status = models.CharField(blank=True, choices=JOB_STATUSES,
-                                  default='', help_text="The current status of the Job", max_length=20)
+                                  default='open', help_text="The current status of the Job", max_length=20)
     JOB_TYPES = (('', 'Any'), ('hourly', 'Hourly'),
                  ('fixed-price', 'Fixed price'))
     job_type = models.CharField(blank=True, choices=JOB_TYPES,
