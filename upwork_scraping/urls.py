@@ -22,5 +22,5 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     # url(r'^upwork_oauth_login/callback/', callback, name="callback"),
     # url(r'^upwork_oauth_login/', include('django_upwork_auth.urls')),
-    url(r'^$', login_page, name="login_page"),
+    # url(r'^$', login_page, name="login_page"),
 ]

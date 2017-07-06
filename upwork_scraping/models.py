@@ -82,7 +82,6 @@ class Job(models.Model):
         job_data['snippet'] = job_dict['snippet']
         job_data['subcategory2'] = job_dict['subcategory2']
         job_data['title'] = job_dict['title']
-        print job_data['title'] + '(' + ', '.join(job_dict['skills']) + ')'
         job_data['url'] = job_dict['url']
         if job_dict['workload'] is None:
             job_data['workload'] = ''
@@ -91,8 +90,8 @@ class Job(models.Model):
         job, is_new = Job.objects.update_or_create(
             id=job_data['id'], defaults=job_data)
         if is_new:
-            job.save()
-        return job
+            print job_data['title'] + '(' + ', '.join(job_dict['skills']) + ')'
+        return job, is_new
 
     class Meta:
         get_latest_by = 'date_created'

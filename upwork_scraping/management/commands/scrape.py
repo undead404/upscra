@@ -45,9 +45,11 @@ class Command(BaseCommand):
                 data=data, page_offset=offset, page_size=JOBS_NUM_PER_PAGE)
             # pprint(response)
             for job_dict in response:
-                job = Job.from_dict(job_dict)
-                job.query = query
-            jobs_num += len(response)
+                job, is_new = Job.from_dict(job_dict)
+                if is_new:
+                    job.query = query
+                    job.save()
+                    jobs_num += 1
             if len(response) < JOBS_NUM_PER_PAGE:
                 print(len(response), JOBS_NUM_PER_PAGE)
                 break
