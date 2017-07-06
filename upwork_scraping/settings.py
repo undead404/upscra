@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import djcelery
 from getenv import env
 import os
 
@@ -40,6 +41,8 @@ INSTALLED_APPS = (
     # 'django_upwork_auth',
     'django_extensions',
     'upwork_scraping',
+    'djcelery',
+    'djkombu',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -124,3 +127,8 @@ UPWORK_OAUTH_ACCESS_TOKEN_SECRET = env('UPWORK_OAUTH_ACCESS_TOKEN_SECRET')
 # UPWORK_OAUTH_ACCESS_TOKEN_SESSION_KEY = '_ort'
 TELEGRAM_BOT_TOKEN = env('TELEGRAM_BOT_TOKEN')
 TELEGRAM_CHANNEL_ID = env('TELEGRAM_CHANNEL_ID')
+
+djcelery.setup_loader()
+CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
+CELERY_ALWAYS_EAGER = False
+BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
