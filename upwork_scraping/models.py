@@ -112,42 +112,50 @@ class Query(models.Model):
                                 help_text="Indicates the workload for the job", max_length=20)
 
     def __str__(self):
-        key_values = self.get_key_values()
-        return '&'.join('{key}={value}'.format(key=key, value=key_values[key]) for key in key_values)
+        # key_values = self.get_key_values()
+        return '&'.join('{key}={value}'.format(key=key, value=key_values[key]) for key in self.key_values())
 
     def clean(self):
         if not (self.q or self.skills or self.title):
             raise ValidationError(
                 "You must specify either q or skills or title")
 
-    def get_key_values(self):
-        if self.__key_values:
-            return self.__key_values
-        self.__key_values = {}
-        if self.budget:
-            self.__key_values['budget'] = self.budget
-        if self.category2:
-            self.__key_values['category2'] = self.category2
-        if self.client_feedback:
-            self.__key_values['client_feedback'] = self.client_feedback
-        if self.client_hires:
-            self.__key_values['client_hires'] = self.client_hires
+    # def get_key_values(self):
+    #     if self.__key_values:
+    #         return self.__key_values
+    #     self.__key_values = {}
+    #     if self.budget:
+    #         self.__key_values['budget'] = self.budget
+    #     if self.category2:
+    #         self.__key_values['category2'] = self.category2
+    #     if self.client_feedback:
+    #         self.__key_values['client_feedback'] = self.client_feedback
+    #     if self.client_hires:
+    #         self.__key_values['client_hires'] = self.client_hires
+    #     if self.days_posted is not None:
+    #         self.__key_values['days_posted'] = self.days_posted
+    #     if self.duration:
+    #         self.__key_values['duration'] = self.duration
+    #     if self.job_status:
+    #         self.__key_values['job_status'] = self.job_status
+    #     if self.job_type:
+    #         self.__key_values['job_type'] = self.job_type
+    #     if self.q:
+    #         self.__key_values['q'] = self.q
+    #     if self.skills:
+    #         self.__key_values['skills'] = self.skills
+    #     if self.subcategory2:
+    #         self.__key_values['subcategory2'] = self.subcategory2
+    #     if self.title:
+    #         self.__key_values['title'] = self.title
+    #     if self.workload:
+    #         self.__key_values['workload'] = self.workload
+    #     return self.__key_values
+    @cached_property
+    def key_values(self):
+        keys = ['budget', 'category2', 'client_feedback', 'client_hires', 'duration', 'job_status',
+                'job_type', 'q', 'skills', 'subcategory2', 'title', 'workload']
+        key_values = {k: getattr(self, k) for k in keys if getattr(self, k)}
         if self.days_posted is not None:
-            self.__key_values['days_posted'] = self.days_posted
-        if self.duration:
-            self.__key_values['duration'] = self.duration
-        if self.job_status:
-            self.__key_values['job_status'] = self.job_status
-        if self.job_type:
-            self.__key_values['job_type'] = self.job_type
-        if self.q:
-            self.__key_values['q'] = self.q
-        if self.skills:
-            self.__key_values['skills'] = self.skills
-        if self.subcategory2:
-            self.__key_values['subcategory2'] = self.subcategory2
-        if self.title:
-            self.__key_values['title'] = self.title
-        if self.workload:
-            self.__key_values['workload'] = self.workload
-        return self.__key_values
+            self.key_values['days_posted'] = self.days_posted
+        return key_values

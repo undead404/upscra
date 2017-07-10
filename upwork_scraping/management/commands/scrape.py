@@ -38,7 +38,7 @@ class Command(BaseCommand):
             print(query)
             offset = 0
             while True:
-                data = query.get_key_values()
+                data = query.key_values()
                 # data['page'] = "{offset};{count}".format(
                 #     count=JOBS_NUM_PER_PAGE, offset=offset)
                 response = client.provider_v2.search_jobs(
