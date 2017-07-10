@@ -110,6 +110,7 @@ GRAPH_MODELS = {
     'all_applications': True,
     'group_models': True,
 }
+STATIC_ROOT = '/staticfiles/'
 
 # Upwork auth
 # AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
