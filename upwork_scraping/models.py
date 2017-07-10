@@ -1,3 +1,4 @@
+from cached_property import cached_property
 from django.core.exceptions import ValidationError
 from django.db import models
 
