@@ -105,12 +105,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
 GRAPH_MODELS = {
     'all_applications': True,
     'group_models': True,
 }
-STATIC_ROOT = '/staticfiles/'
 
 # Upwork auth
 # AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
