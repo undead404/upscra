@@ -22,7 +22,7 @@ httplib2==0.10.3
 httplib2.system-ca-certs-locater==0.1.2
 idna==2.5
 ipdb==0.10.3
-ipython==5.4.1
+ipython==7.16.3
 ipython-genutils==0.2.0
 kombu==3.0.37
 oauth2==1.5.211
